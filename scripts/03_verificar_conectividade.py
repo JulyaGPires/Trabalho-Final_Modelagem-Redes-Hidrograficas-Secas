@@ -3,13 +3,16 @@ from pathlib import Path
 import pandas as pd
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-arquivo = BASE_DIR / "data" / "processed" / "dataset_hidrologico.csv"
+arquivo = BASE_DIR / "data" / "processed" / "dataset_hidrologico_global.csv"
 
 
 def main():
     print("=== VERIFICACAO DE CONECTIVIDADE GEOGRAFICA ===")
 
-    df = pd.read_csv(arquivo)
+    df = pd.read_csv(
+       arquivo,
+       usecols=["hyriv_id", "next_down", "lon", "lat"]
+    )
 
     # Mesmo recorte geografico usado na validacao anterior
     fora = (
