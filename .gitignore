@@ -12,3 +12,5 @@ data/input/*
 !data/input/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+*.sqlite
+*backup*.py
