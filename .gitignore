@@ -1,14 +1,9 @@
-.venv/
-__pycache__/
-*.pyc
-*.o
-*.out
-*.exe
-build/
-build-*/
-*.tmp
-*.log
 data/input/*
-!data/input/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+*backup*.py
+
+# Arquivos compactados e bancos locais pesados
+*.zip
+*.sqlite
+*.db
