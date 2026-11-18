@@ -1,5 +1,4 @@
 #include "../src/includes/KdTree.hpp"
-
 #include <chrono>
 #include <cmath>
 #include <cstdio>
@@ -14,11 +13,7 @@
 
 using namespace std;
 
-// Le o arquivo CSV com os dados dos rios
-static bool carregarCSV(const string& caminhoArquivo,
-                        vector<int32_t>& ids,
-                        vector<double>& latitudes,
-                        vector<double>& longitudes) {
+static bool carregarCSV(const string& caminhoArquivo, vector<int32_t>& ids, vector<double>& latitudes, vector<double>& longitudes) {
     ifstream arquivo(caminhoArquivo);
     if (!arquivo.is_open()) {
         cerr << "Erro ao abrir CSV: " << caminhoArquivo << "\n";
@@ -63,7 +58,6 @@ static bool carregarCSV(const string& caminhoArquivo,
     int maiorIndiceNecessario = max(colId, max(colLat, colLon));
     string linha;
 
-    // Le as linhas de dados
     while (getline(arquivo, linha)) {
         if (linha.empty()) {
             continue;
@@ -165,7 +159,6 @@ int main(int argc, char** argv) {
         numConsultas = 1000;
     }
 
-    // Se passou CSV usa ele, senao gera 200 mil pontos sinteticos
     if (argc > 1) {
         if (!carregarCSV(argv[1], ids, latitudes, longitudes)) {
             return 1;
@@ -229,15 +222,15 @@ int main(int argc, char** argv) {
         consultasGlobo.push_back({latUniforme, lonUniforme});
     }
 
-    consultasGlobo.push_back({0.0, 180.0});    // Linha de mudanca de data (leste)
-    consultasGlobo.push_back({0.0, -180.0});   // Linha de mudanca de data (oeste)
-    consultasGlobo.push_back({90.0, 0.0});     // Polo Norte
-    consultasGlobo.push_back({-90.0, 0.0});    // Polo Sul
+    consultasGlobo.push_back({0.0, 180.0});  // Linha de mudanca de data (leste)
+    consultasGlobo.push_back({0.0, -180.0}); // Linha de mudanca de data (oeste)
+    consultasGlobo.push_back({90.0, 0.0}); // Polo Norte
+    consultasGlobo.push_back({-90.0, 0.0}); // Polo Sul
     consultasGlobo.push_back({-19.9167, -43.9345}); // Belo Horizonte
     consultasGlobo.push_back({-20.0753, -44.5769}); // Itauna
 
     int totalErros = rodarCenario(arvore, "perto de rios", consultasPertoDeRios);
-    totalErros    += rodarCenario(arvore, "globo uniforme", consultasGlobo);
+    totalErros += rodarCenario(arvore, "globo uniforme", consultasGlobo);
 
     // Cenario C: busca por 5 vizinhos mais proximos
     int divergenciasK = 0;
@@ -252,8 +245,7 @@ int main(int argc, char** argv) {
         KdTree::Vizinho vizinhoUnico{};
         arvore.buscarMaisProximo(latTeste, lonTeste, vizinhoUnico);
 
-        bool primeiroConfere = !cincoVizinhos.empty() &&
-                               (fabs(cincoVizinhos[0].dist_km - vizinhoUnico.dist_km) <= 1e-9);
+        bool primeiroConfere = !cincoVizinhos.empty() && (fabs(cincoVizinhos[0].dist_km - vizinhoUnico.dist_km) <= 1e-9);
 
         bool ordenacaoValida = true;
         for (size_t j = 1; j < cincoVizinhos.size(); ++j) {

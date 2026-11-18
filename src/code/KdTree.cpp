@@ -40,9 +40,7 @@ double KdTree::corda2ParaKm(double distanciaQuadrada) {
 }
 
 // Carrega os dados e inicia a construcao recursiva
-void KdTree::construir(const std::vector<int32_t>& ids,
-                       const std::vector<double>& lat,
-                       const std::vector<double>& lon) {
+void KdTree::construir(const std::vector<int32_t>& ids, const std::vector<double>& lat, const std::vector<double>& lon) {
     auto tempoInicio = std::chrono::steady_clock::now();
 
     size_t totalPontos = ids.size();
@@ -74,11 +72,7 @@ void KdTree::construirRec(int inicio, int fim, int profundidade) {
     int eixo = profundidade % 3; // 0=X, 1=Y, 2=Z
 
     // Pega a mediana no eixo atual em tempo linear O(n)
-    std::nth_element(
-        pontos.begin() + inicio,
-        pontos.begin() + meio,
-        pontos.begin() + fim,
-        [eixo](const Ponto& pontoA, const Ponto& pontoB) {
+    std::nth_element(pontos.begin() + inicio, pontos.begin() + meio, pontos.begin() + fim, [eixo](const Ponto& pontoA, const Ponto& pontoB) {
             return pontoA.coord[eixo] < pontoB.coord[eixo];
         }
     );
@@ -87,11 +81,7 @@ void KdTree::construirRec(int inicio, int fim, int profundidade) {
     construirRec(meio + 1, fim, profundidade + 1);
 }
 
-// Busca o vizinho mais proximo com poda
-void KdTree::maisProximoRec(int inicio, int fim, int profundidade,
-                            const double pontoAlvo[3],
-                            int& melhorIndice,
-                            double& menorDistanciaQuadrada) {
+void KdTree::maisProximoRec(int inicio, int fim, int profundidade, const double pontoAlvo[3], int& melhorIndice, double& menorDistanciaQuadrada) {
     if (inicio >= fim) {
         return;
     }
@@ -114,7 +104,6 @@ void KdTree::maisProximoRec(int inicio, int fim, int profundidade,
     if (diferencaEixo < 0.0) {
         maisProximoRec(inicio, meio, profundidade + 1, pontoAlvo, melhorIndice, menorDistanciaQuadrada);
 
-        // Se o corte estiver mais perto que a melhor distancia, olha o outro lado
         if ((diferencaEixo * diferencaEixo) < menorDistanciaQuadrada) {
             maisProximoRec(meio + 1, fim, profundidade + 1, pontoAlvo, melhorIndice, menorDistanciaQuadrada);
         }
@@ -147,10 +136,7 @@ bool KdTree::buscarMaisProximo(double lat, double lon, Vizinho& resultado) {
 }
 
 // Busca os k vizinhos mantendo um max-heap com os melhores
-void KdTree::kVizinhosRec(int inicio, int fim, int profundidade,
-                          const double pontoAlvo[3],
-                          int k,
-                          std::vector<std::pair<double, int>>& heapVizinhos) {
+void KdTree::kVizinhosRec(int inicio, int fim, int profundidade, const double pontoAlvo[3], int k, std::vector<std::pair<double, int>>& heapVizinhos) {
     if (inicio >= fim) {
         return;
     }
@@ -220,7 +206,6 @@ std::vector<KdTree::Vizinho> KdTree::buscarKVizinhos(double lat, double lon, int
     return vizinhosMaisProximos;
 }
 
-// Busca linear simples O(n) para conferir nos testes
 bool KdTree::buscarMaisProximoLinear(double lat, double lon, Vizinho& resultado) const {
     if (pontos.empty()) {
         return false;
