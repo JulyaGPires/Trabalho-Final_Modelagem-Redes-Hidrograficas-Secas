@@ -9,8 +9,12 @@ import numpy as np
 import pandas as pd
 from netCDF4 import Dataset
 
-BASE = Path("data/processed/glofas")
-DOWNLOADS = Path.home() / "Downloads"
+PROJETO_DIR = Path(__file__).resolve().parent.parent
+BASE = PROJETO_DIR / "data" / "processed" / "glofas"
+
+PASTA_ZIPS = PROJETO_DIR / "data" / "input" / "glofas_zips"
+if not PASTA_ZIPS.exists() or not any(PASTA_ZIPS.glob("*.zip")):
+    PASTA_ZIPS = Path.home() / "Downloads"
 
 MANIFESTO = BASE / "manifesto_glofas.csv"
 COBERTURA = BASE / "cobertura_diaria_glofas.csv"
@@ -129,7 +133,7 @@ try:
         tempo_arquivo_inicio = time.time()
         registro = manifesto.iloc[arquivo_index]
         nome = str(registro["arquivo"])
-        zip_path = DOWNLOADS / nome
+        zip_path = PASTA_ZIPS / nome
 
         if not zip_path.exists():
             raise FileNotFoundError(f"ZIP não encontrado: {zip_path}")

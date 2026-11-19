@@ -49,9 +49,9 @@ def main():
     duplicados = 0
 
     try:
-        # -------------------------------------------------
+        
         # ETAPA 1: IMPORTAÇÃO DOS IDENTIFICADORES
-        # -------------------------------------------------
+       
 
         print("\n[ETAPA 1] Importando identificadores...")
 
@@ -122,9 +122,9 @@ def main():
         print(f"[INFO] IDs únicos: {total_nos:,}")
         print(f"[INFO] IDs duplicados: {duplicados:,}")
 
-        # -------------------------------------------------
+        
         # ETAPA 2: INDEXAÇÃO E REFERÊNCIAS
-        # -------------------------------------------------
+       
 
         print("\n[ETAPA 2] Verificando conexões...")
 
@@ -185,9 +185,9 @@ def main():
             f"{referencias_inexistentes:,}"
         )
 
-        # -------------------------------------------------
+        
         # ETAPA 3: PREPARAÇÃO PARA DETECÇÃO DE CICLOS
-        # -------------------------------------------------
+        
 
         print("\n[ETAPA 3] Calculando graus de entrada...")
 
@@ -232,9 +232,9 @@ def main():
             )
         """)
 
-        # -------------------------------------------------
+        
         # ETAPA 4: REMOÇÃO TOPOLÓGICA
-        # -------------------------------------------------
+        
 
         print("\n[ETAPA 4] Detectando ciclos na rede...")
         print("[INFO] Processando a fila em blocos...")
@@ -313,9 +313,9 @@ def main():
             if removidos % 500000 < tamanho_bloco:
                 print(f"[INFO] Nós processados: {removidos:,}")
 
-        # -------------------------------------------------
+        
         # ETAPA 5: IDENTIFICAÇÃO DOS CICLOS
-        # -------------------------------------------------
+        
 
         cursor.execute("""
             SELECT COUNT(*)
@@ -332,9 +332,9 @@ def main():
         """)
         amostra_ciclos = cursor.fetchall()
 
-        # -------------------------------------------------
+        
         # ETAPA 6: RESULTADOS
-        # -------------------------------------------------
+        
 
         relatorio = [
             "VALIDAÇÃO DO HYDRORIVERS GLOBAL",
