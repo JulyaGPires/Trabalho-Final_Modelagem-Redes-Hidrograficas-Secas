@@ -17,10 +17,10 @@ static void confereRaizes(const Floresta& f, const string& nome) {
     double total = 0.0, esperado = 0.0;
     size_t visitados = 0;
     auto t0 = chrono::steady_clock::now();
-    
+
     for (int32_t r : f.raizes) {
         total += bfs.deficitBFS(f, r);
-        visitados += bfs.nosVisitados();
+        visitados += bfs.tamanhoBacia();
     }
 
     double seg = chrono::duration<double>(chrono::steady_clock::now() - t0).count();
@@ -38,11 +38,11 @@ static void arvorePequena() {
     f.construir({1, 2, 3, 4, 5}, {3, 3, 4, 0, 4}, {5, 3, 2, 1, 4}, &erro);
     BFS bfs;
     CHECA(bfs.deficitBFS(f, f.indiceDe(3)) == 10, "C deve dar 10");
-    CHECA(bfs.nosVisitados() == 3, "bacia de C tem 3 trechos");
+    CHECA(bfs.tamanhoBacia() == 3, "bacia de C tem 3 trechos");
     CHECA(bfs.deficitBFS(f, f.indiceDe(4)) == 15, "D deve dar 15");
-    CHECA(bfs.nosVisitados() == 5, "bacia de D tem 5 trechos");
+    CHECA(bfs.tamanhoBacia() == 5, "bacia de D tem 5 trechos");
     CHECA(bfs.deficitBFS(f, f.indiceDe(1)) == 5, "A deve dar 5");
-    CHECA(bfs.nosVisitados() == 1, "bacia de A tem 1 trecho");
+    CHECA(bfs.tamanhoBacia() == 1, "bacia de A tem 1 trecho");
     CHECA(bfs.deficitBFS(f, f.indiceDe(5)) == 4, "E deve dar 4");
 }
 

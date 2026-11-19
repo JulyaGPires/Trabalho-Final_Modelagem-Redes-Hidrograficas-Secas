@@ -31,6 +31,6 @@ double BFS::deficitBFS(const Floresta& floresta, int32_t indice){
 }
 
 // tamanho da bacia
-size_t BFS::nosVisitados() const {
+size_t BFS::tamanhoBacia() const {
     return this->fila.size();
 }

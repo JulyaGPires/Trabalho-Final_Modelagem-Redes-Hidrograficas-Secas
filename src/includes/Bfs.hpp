@@ -10,7 +10,7 @@ class BFS {
     public:
         BFS();
         double deficitBFS(const Floresta& floresta, int32_t indice);
-        size_t nosVisitados() const; // retorna o tamanho da bacia
+        size_t tamanhoBacia() const; // retorna o tamanho da bacia
 
     private:
         std::vector<int32_t> fila;
