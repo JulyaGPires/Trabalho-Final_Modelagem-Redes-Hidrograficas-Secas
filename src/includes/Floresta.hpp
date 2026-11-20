@@ -12,6 +12,8 @@ class Floresta {
         std::vector<int64_t> ids;  // hyriv_id original de cada trecho
         std::vector<int32_t> jusante; // Indice do trecho a jusante (rio abaixo), ou -1 se for foz
         std::vector<double> peso; // Deficit hidrico ou peso do trecho
+        std::vector<double> lat;
+        std::vector<double> lon;
 
         // Lista de adjacencia compacta (CSR) para guardar os afluentes (filhos) de cada trecho:
         // os afluentes do vertice v estão no intervalo [iniFilhos[v], iniFilhos[v + 1])

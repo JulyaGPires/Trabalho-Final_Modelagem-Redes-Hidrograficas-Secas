@@ -172,6 +172,8 @@ bool Floresta::carregarCSV(const string& caminhoArquivo, const string& colunaPes
     int colId = -1;
     int colNext = -1;
     int colPeso = -1;
+    int colLat = -1;  
+    int colLon = -1;
     string alvoPeso = paraMinusculo(colunaPeso);
 
     for (size_t i = 0; i < camposCabecalho.size(); ++i) {
@@ -180,6 +182,10 @@ bool Floresta::carregarCSV(const string& caminhoArquivo, const string& colunaPes
             colId = static_cast<int>(i);
         } else if (nomeColuna == "next_down") {
             colNext = static_cast<int>(i);
+        } else if (nomeColuna == "lat") {
+            colLat = static_cast<int>(i);
+        } else if (nomeColuna == "lon") {
+            colLon = static_cast<int>(i);
         } else if (!alvoPeso.empty() && nomeColuna == alvoPeso) {
             colPeso = static_cast<int>(i);
         }
@@ -193,11 +199,14 @@ bool Floresta::carregarCSV(const string& caminhoArquivo, const string& colunaPes
         return registrarErro("coluna de peso '" + colunaPeso + "' nao foi encontrada");
     }
 
-    int maiorColuna = max({colId, colNext, colPeso});
+    bool temCoordenadas = (colLat >= 0 && colLon >= 0);
+    int maiorColuna = max({colId, colNext, colPeso, colLat, colLon});
 
     vector<int64_t> idsLidos;
     vector<int64_t> nextLidos;
     vector<double> pesosLidos;
+    vector<double> latLidos;
+    vector<double> lonLidos;
 
     string linha;
     vector<string_view> camposLinha;
@@ -229,9 +238,25 @@ bool Floresta::carregarCSV(const string& caminhoArquivo, const string& colunaPes
             }
         }
         pesosLidos.push_back(pesoTrecho);
+
+        if (temCoordenadas) {
+            latLidos.push_back(strtod(camposLinha[colLat].data(), nullptr));
+            lonLidos.push_back(strtod(camposLinha[colLon].data(), nullptr));
+        }
     }
 
-    return construir(move(idsLidos), nextLidos, move(pesosLidos), erro);
+    lat.clear();
+    lon.clear();
+    if (!construir(move(idsLidos), nextLidos, move(pesosLidos), erro)) {
+        return false;
+    }
+
+    if (temCoordenadas) {
+        lat = move(latLidos);
+        lon = move(lonLidos);
+    }
+
+    return true;
 }
 
 // Gera pesos aleatorios inteiros entre 1 e 10 para testes
@@ -283,6 +308,8 @@ size_t Floresta::memoriaBytes() const {
     return (ids.capacity() * sizeof(int64_t)) +
            (jusante.capacity() * sizeof(int32_t)) +
            (peso.capacity() * sizeof(double)) +
+           (lat.capacity() * sizeof(double)) +
+           (lon.capacity() * sizeof(double)) +
            (iniFilhos.capacity() * sizeof(int32_t)) +
            (filhos.capacity() * sizeof(int32_t)) +
            (raizes.capacity() * sizeof(int32_t)) +
