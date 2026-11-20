@@ -1,0 +1,12 @@
+arquivo de pesos: data/processed/dataset_com_deficit.csv
+cenário (coluna de peso): deficit_total
+trechos: 8477883 | raízes: 156162
+execuções gravadas: 10 (mais 1 de aquecimento) | semente: 42 | escala das consultas: 1 | passadas BFS (--bfs-todos): 3
+CPU: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+threads de hardware: 8
+RAM total: 3832 MB
+sistema: Linux version 6.6.87.2-microsoft-standard-WSL2 (root@439a258ad544) (gcc (GCC) 11.2.0, GNU ld (GNU Binutils) 2.37) #1 SMP PREEMPT_DYNAMIC Thu Jun  5 18:30:46 UTC 2025
+WSL: sim
+compilador: 13.3.0
+compilado com otimização (-O2/-O3): sim
+pico de memória do Euler Tour medido: sim
