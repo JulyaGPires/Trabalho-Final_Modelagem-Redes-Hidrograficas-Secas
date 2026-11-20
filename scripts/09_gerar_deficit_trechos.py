@@ -1,17 +1,18 @@
 """
-Gera o CSV que o C++ le: um deficit por trecho, em tres cenarios.
+PROBLEMA DAS CELULAS REPETIDAS
+  Varios trechos caem na mesma celula do GloFAS (0,05 graus). Se cada trecho
+  herdasse o valor inteiro da celula, a soma de uma bacia contaria a mesma
+  celula varias vezes.
 
-  deficit_seca  = soma dos 72 meses de jan/2012 a dez/2017
-  deficit_total = soma dos 252 meses (2000-2020)
-  deficit_mes   = deficit de um unico mes (o de maior deficit agregado do
-                  Sao Francisco dentro de 2012-2017, igual ao script da seca)
+  Solucao adotada: o valor de cada celula e DISTRIBUIDO entre os trechos que
+  caem nela, de modo que a soma dos pesos dos trechos de uma celula e igual
+  ao valor da celula (cada celula entra uma vez no total).
 
-Etapas:
-  1. Escolhe o mes unico (celulas do Sao Francisco, 72 meses).
-  2. Le a matriz de deficits (memmap, em blocos) e calcula os 3 valores por celula.
-  3. Copia os valores da celula para cada trecho (mapeamento hyriv_id -> cell_index).
+    --regra comprimento (padrao): fracao de cada trecho = length_km do trecho
+                                  / soma dos length_km dos trechos da celula
+    --regra igual               : fracao = 1 / (numero de trechos da celula)
 
-Regra de NaN: mes sem dado conta como 0. 
+  Se todos os trechos de uma celula tiverem comprimento 0, a divisao é igual.
 """
 import argparse
 import sys
@@ -45,6 +46,26 @@ def exigir_coluna(arquivo, colunas, candidatos, descricao):
     return col
 
 
+def calcular_fracoes(cel, valido, comp, n_celulas, regra):
+    """
+    Fracao do valor da celula que cada trecho recebe.
+    A soma das fracoes dos trechos de uma mesma celula e 1.
+    """
+    n_trechos = len(cel)
+    n_por_celula = np.bincount(cel[valido], minlength=n_celulas)
+    frac = np.zeros(n_trechos, dtype=np.float64)
+
+    if regra == "comprimento":
+        soma_comp = np.bincount(cel[valido], weights=comp[valido], minlength=n_celulas)
+        tem_comp = valido & (soma_comp[cel] > 0)
+        frac[tem_comp] = comp[tem_comp] / soma_comp[cel[tem_comp]]
+        sem_comp = valido & ~tem_comp                   # celula cujos trechos tem comprimento 0
+        frac[sem_comp] = 1.0 / n_por_celula[cel[sem_comp]]
+    else:
+        frac[valido] = 1.0 / n_por_celula[cel[valido]]
+    return frac, n_por_celula
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--dataset", default="data/processed/dataset_hidrologico_global.csv")
@@ -54,11 +75,16 @@ def main():
     p.add_argument("--celulas-regiao", default="data/processed/glofas/celulas_sao_francisco_unicas.csv")
     p.add_argument("--saida", default="data/processed/dataset_com_deficit.csv")
     p.add_argument("--relatorio", default="results/cenarios_deficit_info.txt")
+    p.add_argument("--regra", choices=["comprimento", "igual"], default="comprimento",
+                   help="como dividir o valor da celula entre os trechos dela")
     p.add_argument("--n-celulas", type=int, default=N_CELULAS_PADRAO)
     p.add_argument("--mes-indice", type=int, default=None,
                    help="forca o indice (0..251) do mes unico, em vez de escolher pelo Sao Francisco")
     p.add_argument("--bloco", type=int, default=100_000, help="celulas lidas por vez")
     args = p.parse_args()
+
+    if args.bloco <= 0:
+        sys.exit("[ERRO] O tamanho do bloco deve ser positivo.")
 
     for arq in [args.dataset, args.mapeamento, args.deficits, args.meses]:
         if not Path(arq).exists():
@@ -123,15 +149,20 @@ def main():
         print(f"       {fim:>10,} / {n_celulas:,}", end="\r")
     print()
 
-    # ------------------------------------------------ 3. valores por trecho
+    # ------------------------------------------------ 3. rede e mapeamento
     print("[INFO] Lendo a rede e o mapeamento trecho -> celula...")
     cab = pd.read_csv(args.dataset, nrows=0).columns
     c_id = exigir_coluna(args.dataset, cab, ["hyriv_id"], "hyriv_id")
     c_next = exigir_coluna(args.dataset, cab, ["next_down"], "next_down")
     c_lat = exigir_coluna(args.dataset, cab, ["lat"], "latitude")
     c_lon = exigir_coluna(args.dataset, cab, ["lon"], "longitude")
-    trechos = pd.read_csv(args.dataset, usecols=[c_id, c_next, c_lat, c_lon])
-    trechos = trechos.rename(columns={c_id: "hyriv_id", c_next: "next_down", c_lat: "lat", c_lon: "lon"})
+    colunas_ler = [c_id, c_next, c_lat, c_lon]
+    renomear = {c_id: "hyriv_id", c_next: "next_down", c_lat: "lat", c_lon: "lon"}
+    if args.regra == "comprimento":
+        c_comp = exigir_coluna(args.dataset, cab, ["length_km"], "comprimento do trecho")
+        colunas_ler.append(c_comp)
+        renomear[c_comp] = "length_km"
+    trechos = pd.read_csv(args.dataset, usecols=colunas_ler).rename(columns=renomear)
     n_trechos = len(trechos)
 
     cab_m = pd.read_csv(args.mapeamento, nrows=0).columns
@@ -147,16 +178,37 @@ def main():
     if len(trechos) != n_trechos:
         sys.exit(f"[ERRO] o merge mudou o numero de linhas: {n_trechos} -> {len(trechos)}")
 
-    sem_celula = np.array(trechos["cell_index"].isna())                      # np.array copia (pandas novo devolve somente leitura)
+    sem_celula = np.array(trechos["cell_index"].isna())          # np.array copia (pandas novo devolve somente leitura)
     cel = np.array(trechos["cell_index"].fillna(-1), dtype=np.int64)
     sem_celula |= cel < 0
-    if cel[~sem_celula].size and cel[~sem_celula].max() >= n_celulas:
+    valido = ~sem_celula
+    if cel[valido].size and cel[valido].max() >= n_celulas:
         sys.exit("[ERRO] cell_index fora dos limites da matriz")
-    cel[sem_celula] = 0
+    cel[sem_celula] = 0                                          # evita indice negativo; sera mascarado
+
+    comp = np.zeros(n_trechos, dtype=np.float64)
+    if args.regra == "comprimento":
+        comp = np.array(trechos["length_km"], dtype=np.float64)
+        if not np.isfinite(comp).all():
+            sys.exit("[ERRO] Existem comprimentos ausentes ou nao finitos.")
+        if (comp < 0).any():
+            sys.exit("[ERRO] Existem comprimentos negativos.")
+
+    # ------------------------------------------------ 4. distribuicao entre os trechos
+    frac, n_por_celula = calcular_fracoes(cel, valido, comp, n_celulas, args.regra)
+
+    usadas = n_por_celula > 0
+    n_usadas = int(usadas.sum())
+    media_por_celula = float(n_por_celula[usadas].mean()) if n_usadas else 0.0
+    max_por_celula = int(n_por_celula.max())
+    celulas_com_varios = int((n_por_celula > 1).sum())
+    print(f"[INFO] Celulas usadas por algum trecho: {n_usadas:,} de {n_celulas:,}")
+    print(f"[INFO] Trechos por celula: media {media_por_celula:.2f}, maximo {max_por_celula}; "
+          f"celulas com mais de um trecho: {celulas_com_varios:,}")
 
     for nome, vetor in [("deficit_seca", seca), ("deficit_total", total), ("deficit_mes", mes)]:
-        valores = vetor[cel]
-        valores[sem_celula] = 0.0                                   # trecho sem celula: deficit 0
+        valores = vetor[cel] * frac
+        valores[sem_celula] = 0.0                                # trecho sem celula: deficit 0
         trechos[nome] = valores
 
     # ------------------------------------------------ verificacoes
@@ -164,25 +216,41 @@ def main():
     if trechos[cols_def].isna().any().any():
         sys.exit("[ERRO] sobrou NaN nos deficits")
 
+    # conservacao: a soma dos pesos dos trechos e igual a soma dos valores das celulas usadas
+    print("[INFO] Conservacao (soma dos pesos dos trechos x soma dos valores das celulas usadas):")
+    for nome, vetor in [("deficit_seca", seca), ("deficit_total", total), ("deficit_mes", mes)]:
+        soma_trechos = float(trechos[nome].sum())
+        soma_celulas = float(vetor[usadas].sum())
+        ok = np.isclose(soma_trechos, soma_celulas, rtol=1e-9, atol=1e-6)
+        print(f"       {nome:<14} trechos {soma_trechos:.9g} | celulas {soma_celulas:.9g} | "
+              f"{'OK' if ok else 'DIVERGENTE'}")
+        if not ok:
+            sys.exit("[ERRO] a distribuicao nao conservou o total")
+
+    # conferencia manual de trechos sorteados
     rng = np.random.default_rng(1)
-    candidatos = np.flatnonzero(~sem_celula)
+    candidatos = np.flatnonzero(valido)
     amostra = rng.choice(candidatos, size=min(5, len(candidatos)), replace=False)
     print("[INFO] Conferencia manual de trechos sorteados (matriz x CSV):")
     for i in amostra:
         c = int(cel[i])
         linha = np.asarray(dados[c], dtype=np.float64)
-        esp_seca = np.nansum(linha[MES_INI:MES_FIM])
-        esp_total = np.nansum(linha)
-        esp_mes = 0.0 if np.isnan(linha[mes_unico]) else linha[mes_unico]
-        ok = (np.isclose(trechos.at[i, "deficit_seca"], esp_seca, rtol=1e-6, atol=1e-9) and
-              np.isclose(trechos.at[i, "deficit_total"], esp_total, rtol=1e-6, atol=1e-9) and
-              np.isclose(trechos.at[i, "deficit_mes"], esp_mes, rtol=1e-6, atol=1e-9))
-        print(f"       hyriv_id {int(trechos.at[i, 'hyriv_id'])} | celula {c} | "
+        esp_celula = np.nansum(linha[MES_INI:MES_FIM])           # valor da celula no cenario seca
+        membros = np.flatnonzero(valido & (cel == c))            # trechos que dividem a celula
+        if args.regra == "comprimento" and comp[membros].sum() > 0:
+            fr = comp[i] / comp[membros].sum()
+        else:
+            fr = 1.0 / len(membros)
+        esp_trecho = esp_celula * fr
+        soma_membros = float(trechos.loc[membros, "deficit_seca"].sum())
+        ok = (np.isclose(trechos.at[i, "deficit_seca"], esp_trecho, rtol=1e-6, atol=1e-9) and
+              np.isclose(soma_membros, esp_celula, rtol=1e-6, atol=1e-9))
+        print(f"       hyriv_id {int(trechos.at[i, 'hyriv_id'])} | celula {c} ({len(membros)} trechos) | "
               f"seca {trechos.at[i, 'deficit_seca']:.6g} | {'OK' if ok else 'DIVERGENTE'}")
         if not ok:
             sys.exit("[ERRO] a conferencia manual divergiu")
 
-    # ------------------------------------------------ 4. saida
+    # ------------------------------------------------ 5. saida
     Path(args.saida).parent.mkdir(parents=True, exist_ok=True)
     Path(args.relatorio).parent.mkdir(parents=True, exist_ok=True)
     saida = trechos[["hyriv_id", "next_down", "lat", "lon"] + cols_def]
@@ -190,6 +258,10 @@ def main():
     saida.to_csv(args.saida, index=False, float_format="%.9g")
 
     n_sem = int(sem_celula.sum())
+    if args.regra == "comprimento":
+        txt_regra = "proporcional ao length_km do trecho dentro da celula"
+    else:
+        txt_regra = "dividida igualmente entre os trechos da celula"
     linhas = [
         "Cenarios de deficit por trecho",
         f"Trechos: {n_trechos:,}",
@@ -199,7 +271,14 @@ def main():
         "Regra de NaN: mes sem dado conta como 0 (nansum), a mesma regra do C++",
         f"Celulas da matriz sem nenhum dado valido: {celulas_sem_dado:,}",
         f"Trechos sem celula no mapeamento (deficit 0): {n_sem:,}",
-        "Cada trecho herda o deficit da celula em que cai; varios trechos podem dividir a mesma celula.",
+        "",
+        "Celulas repetidas: o valor de cada celula e distribuido entre os trechos que caem nela,",
+        f"  regra: {txt_regra}.",
+        "  A soma dos pesos dos trechos de uma celula e o valor da celula (cada celula entra uma vez).",
+        f"  Celulas usadas por algum trecho: {n_usadas:,} de {n_celulas:,}",
+        f"  Trechos por celula: media {media_por_celula:.2f}, maximo {max_por_celula}; "
+        f"celulas compartilhadas por mais de um trecho: {celulas_com_varios:,}",
+        "  Limitacao: uma bacia que inclui so parte dos trechos de uma celula recebe so parte do valor dela.",
         "Unidade: soma de vazoes mensais em m3/s (indicador agregado, nao volume fisico).",
     ]
     Path(args.relatorio).write_text("\n".join(linhas) + "\n", encoding="utf-8")

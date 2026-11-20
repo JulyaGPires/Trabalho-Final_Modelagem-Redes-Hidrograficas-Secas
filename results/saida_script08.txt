@@ -1,0 +1,39 @@
+[INFO] Janela da seca: 2012-01 ate 2017-12 (72 meses)
+[INFO] Escolhendo o mes unico entre 15,122 celulas da regiao...
+[INFO] Mes unico: indice 206 = 2017-03
+[INFO] Calculando os 3 valores por celula (leitura em blocos)...
+          100,000 / 3,799,864          200,000 / 3,799,864          300,000 / 3,799,864          400,000 / 3,799,864          500,000 / 3,799,864          600,000 / 3,799,864          700,000 / 3,799,864          800,000 / 3,799,864          900,000 / 3,799,864        1,000,000 / 3,799,864        1,100,000 / 3,799,864        1,200,000 / 3,799,864        1,300,000 / 3,799,864        1,400,000 / 3,799,864        1,500,000 / 3,799,864        1,600,000 / 3,799,864        1,700,000 / 3,799,864        1,800,000 / 3,799,864        1,900,000 / 3,799,864        2,000,000 / 3,799,864        2,100,000 / 3,799,864        2,200,000 / 3,799,864        2,300,000 / 3,799,864        2,400,000 / 3,799,864        2,500,000 / 3,799,864        2,600,000 / 3,799,864        2,700,000 / 3,799,864        2,800,000 / 3,799,864        2,900,000 / 3,799,864        3,000,000 / 3,799,864        3,100,000 / 3,799,864        3,200,000 / 3,799,864        3,300,000 / 3,799,864        3,400,000 / 3,799,864        3,500,000 / 3,799,864        3,600,000 / 3,799,864        3,700,000 / 3,799,864        3,799,864 / 3,799,864
+[INFO] Lendo a rede e o mapeamento trecho -> celula...
+[INFO] Celulas usadas por algum trecho: 3,799,864 de 3,799,864
+[INFO] Trechos por celula: media 2.23, maximo 39; celulas com mais de um trecho: 2,062,477
+[INFO] Conservacao (soma dos pesos dos trechos x soma dos valores das celulas usadas):
+       deficit_seca   trechos 1.7207954e+09 | celulas 1.7207954e+09 | OK
+       deficit_total  trechos 6.31908248e+09 | celulas 6.31908248e+09 | OK
+       deficit_mes    trechos 17805931.4 | celulas 17805931.4 | OK
+[INFO] Conferencia manual de trechos sorteados (matriz x CSV):
+       hyriv_id 41195303 | celula 2346932 (8 trechos) | seca 3.32542 | OK
+       hyriv_id 10295476 | celula 2312803 (3 trechos) | seca 0 | OK
+       hyriv_id 60992930 | celula 3180403 (7 trechos) | seca 7.77485 | OK
+       hyriv_id 80041203 | celula 145579 (2 trechos) | seca 73.7647 | OK
+       hyriv_id 40867777 | celula 2083043 (1 trechos) | seca 27.7807 | OK
+[INFO] Gravando data/processed/dataset_com_deficit.csv ...
+
+Cenarios de deficit por trecho
+Trechos: 8,477,883
+deficit_seca : soma de 72 meses, 2012-01 a 2017-12
+deficit_total: soma de 252 meses, 2000-01 a 2020-12
+deficit_mes  : 2017-03 (indice 206); criterio: maior deficit agregado de 15,122 celulas do Sao Francisco entre 2012-01 e 2017-12
+Regra de NaN: mes sem dado conta como 0 (nansum), a mesma regra do C++
+Celulas da matriz sem nenhum dado valido: 3,662
+Trechos sem celula no mapeamento (deficit 0): 0
+
+Celulas repetidas: o valor de cada celula e distribuido entre os trechos que caem nela,
+  regra: proporcional ao length_km do trecho dentro da celula.
+  A soma dos pesos dos trechos de uma celula e o valor da celula (cada celula entra uma vez).
+  Celulas usadas por algum trecho: 3,799,864 de 3,799,864
+  Trechos por celula: media 2.23, maximo 39; celulas compartilhadas por mais de um trecho: 2,062,477
+  Limitacao: uma bacia que inclui so parte dos trechos de uma celula recebe so parte do valor dela.
+Unidade: soma de vazoes mensais em m3/s (indicador agregado, nao volume fisico).
+
+[OK] CSV: data/processed/dataset_com_deficit.csv
+[OK] Relatorio: results/cenarios_deficit_info.txt

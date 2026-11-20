@@ -6,5 +6,11 @@ deficit_mes  : 2017-03 (indice 206); criterio: maior deficit agregado de 15,122 
 Regra de NaN: mes sem dado conta como 0 (nansum), a mesma regra do C++
 Celulas da matriz sem nenhum dado valido: 3,662
 Trechos sem celula no mapeamento (deficit 0): 0
-Cada trecho herda o deficit da celula em que cai; varios trechos podem dividir a mesma celula.
+
+Celulas repetidas: o valor de cada celula e distribuido entre os trechos que caem nela,
+  regra: proporcional ao length_km do trecho dentro da celula.
+  A soma dos pesos dos trechos de uma celula e o valor da celula (cada celula entra uma vez).
+  Celulas usadas por algum trecho: 3,799,864 de 3,799,864
+  Trechos por celula: media 2.23, maximo 39; celulas compartilhadas por mais de um trecho: 2,062,477
+  Limitacao: uma bacia que inclui so parte dos trechos de uma celula recebe so parte do valor dela.
 Unidade: soma de vazoes mensais em m3/s (indicador agregado, nao volume fisico).
