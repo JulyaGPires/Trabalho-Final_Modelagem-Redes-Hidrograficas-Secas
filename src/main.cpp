@@ -212,11 +212,14 @@ int main(int argc, char** argv) {
                 cout << "  Consulta por coordenada indisponivel: o CSV nao tem lat/lon.\n";
                 continue;
             }
-            
+
             // busca o trecho mais proximo na KD-Tree e responde a consulta
             KdTree::Vizinho vizinho;
             auto tk = Relogio::now();
-            if (!kd.buscarMaisProximo(lat, lon, vizinho)) continue;
+            if (!kd.buscarMaisProximo(lat, lon, vizinho)) {
+                cout << "  Nenhum trecho encontrado (rede vazia).\n";
+                continue;
+            }
             double tempoKd = segundosDesde(tk);
             cout << "  KD-Tree  : trecho mais proximo a " << fixed << setprecision(2) << vizinho.dist_km
                  << " km da coordenada (busca em " << formatarTempo(tempoKd) << ")\n";
