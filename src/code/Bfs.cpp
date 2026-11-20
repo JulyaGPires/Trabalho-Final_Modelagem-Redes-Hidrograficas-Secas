@@ -34,3 +34,8 @@ double BFS::deficitBFS(const Floresta& floresta, int32_t indice){
 size_t BFS::tamanhoBacia() const {
     return this->fila.size();
 }
+
+// capacidade alocada no vetor interno da fila
+size_t BFS::capacidadeFila() const {
+    return this->fila.capacity();
+}
