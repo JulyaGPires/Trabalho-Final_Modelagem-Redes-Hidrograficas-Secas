@@ -2,6 +2,8 @@ data/input/*
 data/processed/*
 !data/processed/.gitkeep
 *backup*.py
+!data/sample/
+!data/sample/exemplo.csv
 
 # Arquivos compactados e bancos locais pesados
 *.zip
