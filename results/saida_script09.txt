@@ -1,0 +1,27 @@
+[INFO] Janela da seca: 2012-01 ate 2017-12 (72 meses)
+[INFO] Escolhendo o mes unico entre 15,122 celulas da regiao...
+[INFO] Mes unico: indice 206 = 2017-03
+[INFO] Calculando os 3 valores por celula (leitura em blocos)...
+          100,000 / 3,799,864          200,000 / 3,799,864          300,000 / 3,799,864          400,000 / 3,799,864          500,000 / 3,799,864          600,000 / 3,799,864          700,000 / 3,799,864          800,000 / 3,799,864          900,000 / 3,799,864        1,000,000 / 3,799,864        1,100,000 / 3,799,864        1,200,000 / 3,799,864        1,300,000 / 3,799,864        1,400,000 / 3,799,864        1,500,000 / 3,799,864        1,600,000 / 3,799,864        1,700,000 / 3,799,864        1,800,000 / 3,799,864        1,900,000 / 3,799,864        2,000,000 / 3,799,864        2,100,000 / 3,799,864        2,200,000 / 3,799,864        2,300,000 / 3,799,864        2,400,000 / 3,799,864        2,500,000 / 3,799,864        2,600,000 / 3,799,864        2,700,000 / 3,799,864        2,800,000 / 3,799,864        2,900,000 / 3,799,864        3,000,000 / 3,799,864        3,100,000 / 3,799,864        3,200,000 / 3,799,864        3,300,000 / 3,799,864        3,400,000 / 3,799,864        3,500,000 / 3,799,864        3,600,000 / 3,799,864        3,700,000 / 3,799,864        3,799,864 / 3,799,864
+[INFO] Lendo a rede e o mapeamento trecho -> celula...
+[INFO] Conferencia manual de trechos sorteados (matriz x CSV):
+       hyriv_id 41195303 | celula 2346932 | seca 14.6614 | OK
+       hyriv_id 10295476 | celula 2312803 | seca 0 | OK
+       hyriv_id 60992930 | celula 3180403 | seca 31.8631 | OK
+       hyriv_id 80041203 | celula 145579 | seca 106.233 | OK
+       hyriv_id 40867777 | celula 2083043 | seca 27.7807 | OK
+[INFO] Gravando data/processed/dataset_com_deficit.csv ...
+
+Cenarios de deficit por trecho
+Trechos: 8,477,883
+deficit_seca : soma de 72 meses, 2012-01 a 2017-12
+deficit_total: soma de 252 meses, 2000-01 a 2020-12
+deficit_mes  : 2017-03 (indice 206); criterio: maior deficit agregado de 15,122 celulas do Sao Francisco entre 2012-01 e 2017-12
+Regra de NaN: mes sem dado conta como 0 (nansum), a mesma regra do C++
+Celulas da matriz sem nenhum dado valido: 3,662
+Trechos sem celula no mapeamento (deficit 0): 0
+Cada trecho herda o deficit da celula em que cai; varios trechos podem dividir a mesma celula.
+Unidade: soma de vazoes mensais em m3/s (indicador agregado, nao volume fisico).
+
+[OK] CSV: data/processed/dataset_com_deficit.csv
+[OK] Relatorio: results/cenarios_deficit_info.txt

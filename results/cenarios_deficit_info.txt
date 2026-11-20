@@ -1,0 +1,10 @@
+Cenarios de deficit por trecho
+Trechos: 8,477,883
+deficit_seca : soma de 72 meses, 2012-01 a 2017-12
+deficit_total: soma de 252 meses, 2000-01 a 2020-12
+deficit_mes  : 2017-03 (indice 206); criterio: maior deficit agregado de 15,122 celulas do Sao Francisco entre 2012-01 e 2017-12
+Regra de NaN: mes sem dado conta como 0 (nansum), a mesma regra do C++
+Celulas da matriz sem nenhum dado valido: 3,662
+Trechos sem celula no mapeamento (deficit 0): 0
+Cada trecho herda o deficit da celula em que cai; varios trechos podem dividir a mesma celula.
+Unidade: soma de vazoes mensais em m3/s (indicador agregado, nao volume fisico).
