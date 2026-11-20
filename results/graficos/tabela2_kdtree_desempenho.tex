@@ -1,0 +1,15 @@
+\begin{table*}[htbp]
+\centering
+\footnotesize
+\caption{Desempenho da Indexação Espacial KD-Tree em Relação à Varredura Linear}
+\label{tab:kdtree_perf}
+\begin{tabular}{lccccc}
+\toprule
+Cenário de Consulta & Consultas & Nós Visitados (Média) & Tempo KD-Tree & Tempo Linear & Aceleração (Speedup) \\
+\midrule
+1-NN (Próximo a Trechos de Rio) & 10.000 & 23,8 & 2,09 µs & 829,22 µs & 397,6$\times$ \\
+1-NN (Distribuição Global Uniforme) & 10.006 & 30,1 & 2,16 µs & 723,14 µs & 335,0$\times$ \\
+k-NN (k = 5 vizinhos) & 1.000 & 52,4 & 4,85 µs & 912,50 µs & 188,1$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
