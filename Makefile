@@ -334,8 +334,8 @@ graficos-sf:
 # ==============================================================================
 
 gephi:
-	@echo "$(CYAN)Gerando nodes.csv e edges.csv para o Gephi...$(RESET)"
-	@$(PYTHON) scripts/14_gerar_gephi_total.py
+	@echo "$(CYAN)Gerando gephi_bacia_minuscula_nodes.csv e gephi_bacia_minuscula_edges.csv para o Gephi...$(RESET)"
+	@$(PYTHON) scripts/14_gerar_gephi_bacia.py
 
 sample:
 	@echo "$(CYAN)Gerando dataset de amostra (data/sample/exemplo.csv)...$(RESET)"
@@ -355,7 +355,7 @@ dataset-sf:
 	@$(PYTHON) scripts/12_gerar_dataset_sao_francisco.py
 
 deficit-trechos:
-	@echo "$(CYAN)Distribuindo déficit do GloFAS nos trechos (script 09)...$(RESET)"
+	@echo "$(CYAN)Distribuindo déficit do GloFAS nos trechos, gerando dataset_com_deficit (script 09)...$(RESET)"
 	@$(PYTHON) scripts/09_gerar_deficit_trechos.py
 
 # ==============================================================================
