@@ -377,6 +377,14 @@ Para executar somente o exemplo:
 make run-sample
 ```
 
+**Exemplo — Rede regional (`make run-sample`):**
+
+```text
+> id 61500238
+> coord -34 -62
+> sair
+```
+
 **Recomendação:** após instalar o ambiente, utilize `make check` para validar a compilação e o funcionamento básico antes de executar os experimentos completos.
 
 ---
@@ -422,7 +430,7 @@ make run-sf
 
 ```text
 > id 61017073
-> coord -34 -56
+> coord -34 -78
 > sair
 ```
 
@@ -754,3 +762,15 @@ As condições de reutilização do código e dos datasets devem ser definidas d
 Após a publicação no Zenodo, recomenda-se utilizar o DOI atribuído ao depósito para citar os datasets processados.
 
 O artigo científico associado ao projeto apresenta a metodologia, os experimentos e a discussão dos resultados obtidos.
+
+## Autoras
+Autora: Julya Gonçalves Pires
+
+- Email: julyapires500@gmail.com
+- GitHub: [JulyaGPires](https://github.com/JulyaGPires)
+
+Autora: Rita Mariê Amaral Siqueira
+
+- Email: ritamariecajuru@gmail.com
+- GitHub: [Ritaa-Marie](https://github.com/Ritaa-Marie)
+- Linkedin: [Rita Mariê](https://www.linkedin.com/in/rita-mari%C3%AA-amaral-siqueira-567b74357/)
