@@ -1,0 +1,20 @@
+\begin{table*}[htbp]
+\centering
+\footnotesize
+\caption{Comparativo de Escalabilidade e Localidade Espacial: Rede Global vs. Bacia do Rio São Francisco (Cenário deficit\_seca)}
+\label{tab:comparacao_global_sf}
+\begin{tabular}{lccc}
+\toprule
+Métrica Estrutural / Desempenho & Rede Global & Bacia São Francisco & Relação (Global / SF) \\
+\midrule
+Trechos hidrográficos (n) & 8.477.883 & 31.332 & 270,6$\times$ \\
+Memória base (floresta + CSR) & 609,4 MiB & 1,36 MiB & 448,6$\times$ \\
+Memória adicional Euler Tour & 161,7 MiB & 0,60 MiB & 270,6$\times$ \\
+Pré-processamento Euler (mediana) & 442,8 ms & 0,61 ms & 725,6$\times$ \\
+Latência média BFS (consultas uniformes) & 7.007,7 ns & 4.870,8 ns & 1,44$\times$ \\
+Latência média Euler Tour (uniforme) & 165,7 ns & 20,6 ns & 8,0$\times$ \\
+Ponto de equilíbrio (consultas uniformes) & 64.717 & 126 & 514,4$\times$ \\
+Varredura completa (Kahn) & 650,7 ms & 0,88 ms & 736,4$\times$ \\
+\bottomrule
+\end{tabular}
+\end{table*}
