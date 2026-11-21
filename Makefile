@@ -96,7 +96,7 @@ RESET  := \033[0m
         run run-sf run-sample \
         benchmark benchmark-sf benchmark-all \
         graficos graficos-artigo graficos-sf \
-        gephi sample dataset-sf prep-sf analise-sf deficit-trechos \
+        gephi sample dataset-sf analise-sf deficit-trechos \
         test-floresta test-bfs test-euler test-kdtree
 
 ## help: Exibe este menu de ajuda intuitivo e detalhado
@@ -142,7 +142,6 @@ help:
 	@echo "$(YELLOW)$(BOLD)PROCESSAMENTO DE DADOS E SCRIPTS:$(RESET)"
 	@echo "  $(GREEN)make gephi$(RESET)          Gera processed/gephi_bacia_minuscula_nodes.csv e processed/gephi_bacia_minuscula_edges.csv para importação no Gephi"
 	@echo "  $(GREEN)make sample$(RESET)         Gera amostra representativa data/sample/exemplo.csv"
-	@echo "  $(GREEN)make prep-sf$(RESET)        Prepara recortes de trechos e células do São Francisco"
 	@echo "  $(GREEN)make analise-sf$(RESET)     Calcula série temporal histórica (2012-2017) do São Francisco"
 	@echo "  $(GREEN)make dataset-sf$(RESET)     Filtra dataset do São Francisco a partir do global"
 	@echo "  $(GREEN)make deficit-trechos$(RESET)Mapeia déficits do GloFAS nos trechos hidrográficos"
@@ -341,10 +340,6 @@ sample:
 	@echo "$(CYAN)Gerando dataset de amostra (data/sample/exemplo.csv)...$(RESET)"
 	@mkdir -p $(SAMPLE_DIR)
 	@$(PYTHON) scripts/10_gerar_sample.py $(DATASET_GLOBAL) $(DATASET_SAMPLE)
-
-prep-sf:
-	@echo "$(CYAN)Preparando dados do São Francisco (script 07)...$(RESET)"
-	@$(PYTHON) scripts/07_preparar_sao_francisco.py
 
 analise-sf:
 	@echo "$(CYAN)Analisando série temporal do São Francisco (script 08)...$(RESET)"
