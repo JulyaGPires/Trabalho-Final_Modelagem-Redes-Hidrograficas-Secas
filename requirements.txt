@@ -8,3 +8,6 @@ pyproj==3.8.0
 python-dateutil==4.0.0
 shapely==2.2.0
 tzdata==2026.6
+matplotlib
+netCDF4
+xarray
