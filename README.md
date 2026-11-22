@@ -306,6 +306,9 @@ O procedimento utiliza, por padrão, uma distribuição proporcional ao comprime
 
 ## 6. Compilação do projeto
 
+> [!NOTE]
+> Para consultar todos os demais comandos e opções disponíveis no `Makefile`, execute `make help` na raiz do repositório.
+
 Na raiz do repositório, execute:
 
 ```bash
