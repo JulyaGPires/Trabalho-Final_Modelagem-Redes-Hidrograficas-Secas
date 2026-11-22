@@ -140,7 +140,7 @@ sudo apt update
 Instale Git, compilador C++, Make e ferramentas Python:
 
 ```bash
-sudo apt install -y git build-essential make python3 python3-pip python3-venv
+sudo apt install -y git build-essential make python3 python3-pip python3-venv unzip
 ```
 
 Verifique as instalações:
@@ -193,7 +193,7 @@ A instalação deve ser executada com o ambiente virtual ativado.
 
 Os dados processados necessários à execução do sistema são disponibilizados separadamente no **Zenodo**, devido ao tamanho dos arquivos.
 
-**Repositório de dados:** [inserir link ou DOI do depósito Zenodo após a publicação]
+**Repositório de dados:** https://doi.org/10.5281/zenodo.24429365
 
 A distribuição é organizada em dois conjuntos:
 
@@ -207,7 +207,7 @@ A distribuição é organizada em dois conjuntos:
 | `dataset_com_deficit.csv` | Rede hidrográfica global com atributos de déficit hídrico |
 | `dataset_deficit_sao_francisco.csv` | Recorte regional da Bacia do São Francisco, preparado para execução |
 
-Após baixar os dois arquivos, coloque-os em:
+Após obter autorização e baixar os dois arquivos, coloque-os em:
 
 ```text
 data/
@@ -222,7 +222,7 @@ Não é necessário baixar os arquivos intermediários para utilizar os datasets
 
 ### 4.2. Arquivos intermediários
 
-Para reproduzir o processamento dos datasets finais, o depósito também disponibiliza:
+Para reproduzir o processamento dos datasets finais, o depósito também disponibiliza, mediante acesso autorizado:
 
 ```text
 intermediarios.zip
@@ -684,7 +684,7 @@ make run-sf
 
 ### Fluxo C — Reproduzir os datasets finais
 
-1. Baixe `intermediarios.zip` no Zenodo.
+1. Após obter acesso ao depósito Zenodo, baixe `intermediarios.zip`.
 2. Extraia o arquivo na raiz do repositório.
 3. Ative o ambiente virtual Python e instale as dependências.
 4. Execute:
@@ -719,9 +719,9 @@ O projeto disponibiliza os seguintes materiais:
 | Dataset de exemplo | GitHub |
 | Resultados experimentais registrados | GitHub |
 | Gráficos e tabelas científicos | GitHub |
-| Dataset global processado | Zenodo |
-| Dataset regional processado | Zenodo |
-| Arquivos intermediários de processamento | Zenodo |
+| Dataset global processado | Zenodo — acesso restrito |
+| Dataset regional processado | Zenodo — acesso restrito |
+| Arquivos intermediários de processamento | Zenodo — acesso restrito |
 
 ### Código-fonte
 
@@ -729,9 +729,9 @@ O projeto disponibiliza os seguintes materiais:
 
 ### Dados processados
 
-**Zenodo:** inserir link e DOI após a publicação do depósito.
+**Zenodo:** [Datasets - dados para executar o programa](https://doi.org/10.5281/zenodo.24429365)
 
-A separação entre código-fonte e dados processados facilita a distribuição, a execução e a reutilização dos resultados, evitando o armazenamento de arquivos de grande porte no histórico do Git.
+A separação entre código-fonte e dados processados facilita a organização e a reprodução autorizada dos resultados, evitando o armazenamento de arquivos de grande porte no histórico do Git. **O DOI identifica o registro público; os arquivos permanecem restritos e exigem autorização para download.**
 
 Os arquivos intermediários permitem reproduzir a geração dos datasets finais a partir dos produtos previamente processados, enquanto os datasets finais possibilitam executar diretamente as consultas e os benchmarks.
 
@@ -755,11 +755,19 @@ O uso e a redistribuição dos dados devem observar as condições de licença e
 
 ---
 
-## 17. Licença e citação
+## 17. Disponibilidade dos dados e condições de acesso
 
-As condições de reutilização do código e dos datasets devem ser definidas de acordo com as licenças adotadas pelos autores e as restrições das bases de dados originais.
+Os datasets processados deste projeto encontram-se depositados no **Zenodo**, com identificador DOI e metadados publicamente acessíveis. Entretanto, os arquivos foram disponibilizados sob **acesso restrito**, em razão das condições de licenciamento das bases utilizadas em sua construção.
 
-Após a publicação no Zenodo, recomenda-se utilizar o DOI atribuído ao depósito para citar os datasets processados.
+O projeto integra informações hidrológicas do **GloFAS 5.0**, disponibilizadas pelo Copernicus Emergency Management Service, e dados de estrutura e conectividade hidrográfica do **HydroRIVERS**, produto do HydroSHEDS.
+
+Embora os datasets finais sejam resultados de processamento computacional desenvolvido pelas autoras, eles preservam informações derivadas da topologia hidrográfica original. A licença do HydroRIVERS estabelece condições específicas para a redistribuição de seus dados e produtos derivados, e não foi possível confirmar integralmente o enquadramento dos arquivos produzidos nessas condições.
+
+Diante dessa incerteza, optou-se por restringir o acesso aos arquivos, preservando a rastreabilidade científica, a identificação das fontes e a possibilidade de reprodução dos experimentos mediante acesso autorizado.
+
+**O código-fonte, a documentação e os procedimentos de execução permanecem disponíveis publicamente neste repositório.** Os datasets necessários aos experimentos podem ser solicitados às responsáveis pelo depósito, observadas as condições de uso das fontes originais. Um link de acesso privado, quando concedido, não deve ser divulgado publicamente.
+
+Essa medida busca conciliar a reprodutibilidade científica com o respeito às condições de licenciamento dos dados utilizados, sem reivindicar direitos sobre informações pertencentes a terceiros.
 
 O artigo científico associado ao projeto apresenta a metodologia, os experimentos e a discussão dos resultados obtidos.
 
