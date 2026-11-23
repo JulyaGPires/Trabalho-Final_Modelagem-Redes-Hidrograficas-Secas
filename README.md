@@ -756,6 +756,13 @@ Fonte: [Global Flood Awareness System — Copernicus](https://global-flood.emerg
 
 O uso e a redistribuição dos dados devem observar as condições de licença e atribuição das respectivas fontes.
 
+**ANA — Agência Nacional de Águas e Saneamento Básico**
+
+Base de dados geográficos utilizada para delimitar a Região Hidrográfica do São Francisco e realizar o recorte espacial dos trechos de rios pertencentes à bacia.
+
+Fonte: [Regiões Hidrográficas — ANA/SNIRH](https://metadados.snirh.gov.br/geonetwork/srv/api/records/0574947a-2c5b-48d2-96a4-b07c4702bbab)
+
+
 ---
 
 ## 17. Disponibilidade dos dados e condições de acesso
